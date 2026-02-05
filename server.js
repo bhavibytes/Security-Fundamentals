@@ -6,6 +6,9 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 require("dotenv").config();
 
+// Input validation library (built-in)
+const { body, validationResult } = require('express-validator');
+
 // ===============================
 // App Initialization
 // ===============================
@@ -72,68 +75,149 @@ app.get("/", (req, res) => {
 // -------------------------------
 // Register
 // -------------------------------
-app.post("/register", async (req, res) => {
-  try {
-    const { username, password, role } = req.body;
+app.post("/register",
+  [
+    // Input validation and sanitization
+    body('username')
+      .trim()
+      .isLength({ min: 3, max: 20 })
+      .withMessage('Username must be 3-20 characters')
+      .matches(/^[a-zA-Z0-9_]+$/)
+      .withMessage('Username can only contain letters, numbers, and underscores')
+      .escape(),
 
-    // Input validation
-    if (!username || !password || password.length < 8) {
-      return res.status(400).send("Invalid input");
+    body('password')
+      .isLength({ min: 8 })
+      .withMessage('Password must be at least 8 characters')
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+      .withMessage('Password must contain at least one lowercase, one uppercase, and one number'),
+
+    body('role')
+      .optional()
+      .trim()
+      .isIn(['user', 'admin'])
+      .withMessage('Role must be either user or admin')
+      .escape()
+  ],
+  async (req, res) => {
+    try {
+      // Check for validation errors
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          error: "Validation failed",
+          details: errors.array()
+        });
+      }
+
+      const { username, password, role } = req.body;
+
+      // Prevent users from self-registering as admin
+      const userRole = role === "admin" ? "user" : "user";
+
+      // Check if user exists
+      const existingUser = users.find(u => u.username === username);
+      if (existingUser) {
+        return res.status(409).json({
+          error: "User already exists",
+          message: "Username is already taken"
+        });
+      }
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      // Store user
+      users.push({
+        username,
+        password: hashedPassword,
+        role: userRole,
+        createdAt: new Date()
+      });
+
+      res.status(201).json({
+        message: "User registered successfully",
+        user: { username, role: userRole }
+      });
+    } catch (err) {
+      console.error('Registration error:', err);
+      res.status(500).json({
+        error: "Server error",
+        message: "Registration failed"
+      });
     }
-
-    // Prevent users from self-registering as admin
-    const userRole = role === "admin" ? "user" : "user";
-
-    // Check if user exists
-    const existingUser = users.find(u => u.username === username);
-    if (existingUser) {
-      return res.status(409).send("User already exists");
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    // Store user
-    users.push({
-      username,
-      password: hashedPassword,
-      role: userRole
-    });
-
-    res.status(201).send("User registered successfully");
-  } catch (err) {
-    res.status(500).send("Server error");
   }
-});
+);
 
 // -------------------------------
 // Login
 // -------------------------------
-app.post("/login", async (req, res) => {
-  try {
-    const { username, password } = req.body;
+app.post("/login",
+  [
+    // Input validation and sanitization
+    body('username')
+      .trim()
+      .isLength({ min: 3, max: 20 })
+      .withMessage('Username must be 3-20 characters')
+      .matches(/^[a-zA-Z0-9_]+$/)
+      .withMessage('Username can only contain letters, numbers, and underscores')
+      .escape(),
 
-    const user = users.find(u => u.username === username);
-    if (!user) {
-      return res.status(401).send("Invalid credentials");
+    body('password')
+      .notEmpty()
+      .withMessage('Password is required')
+  ],
+  async (req, res) => {
+    try {
+      // Check for validation errors
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          error: "Validation failed",
+          details: errors.array()
+        });
+      }
+
+      const { username, password } = req.body;
+
+      const user = users.find(u => u.username === username);
+      if (!user) {
+        return res.status(401).json({
+          error: "Invalid credentials",
+          message: "Username or password is incorrect"
+        });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({
+          error: "Invalid credentials",
+          message: "Username or password is incorrect"
+        });
+      }
+
+      // Store identity + role in session
+      req.session.user = {
+        username: user.username,
+        role: user.role
+      };
+
+      res.json({
+        message: "Login successful",
+        user: {
+          username: user.username,
+          role: user.role
+        }
+      });
+    } catch (err) {
+      console.error('Login error:', err);
+      res.status(500).json({
+        error: "Server error",
+        message: "Login failed"
+      });
     }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).send("Invalid credentials");
-    }
-
-    // Store identity + role in session
-    req.session.user = {
-      username: user.username,
-      role: user.role
-    };
-
-    res.send("Login successful");
-  } catch (err) {
-    res.status(500).send("Server error");
   }
-});
+);
 
 // -------------------------------
 // Protected User Route

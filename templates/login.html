@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Cybersecurity Learning App{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 0 auto;">
+    <h2 style="text-align: center; color: #2d3748; margin-bottom: 30px;">Sign In</h2>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required 
+                   placeholder="Enter your username"
+                   autocomplete="username">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required 
+                   placeholder="Enter your password"
+                   autocomplete="current-password">
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div style="margin-top: 30px;">
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+        </div>
+    </form>
+    
+    <div style="text-align: center; margin-top: 20px;">
+        <p style="color: #4a5568;">
+            Don't have an account? 
+            <a href="{{ url_for('register') }}" style="color: #667eea;">Register here</a>
+        </p>
+    </div>
+</div>
+
+<div style="max-width: 400px; margin: 40px auto; padding: 20px; background: #f7fafc; border-radius: 8px;">
+    <h3 style="color: #2d3748; margin-bottom: 15px;">🔒 Security Information</h3>
+    <ul style="color: #4a5568; font-size: 14px; line-height: 1.6;">
+        <li>Failed login attempts are monitored</li>
+        <li>Account locks after 5 failed attempts (5 minutes)</li>
+        <li>Rate limiting prevents brute force attacks</li>
+        <li>All login attempts are logged for security</li>
+        <li>Secure session management with timeout</li>
+    </ul>
+</div>
+
+<div style="max-width: 400px; margin: 20px auto; padding: 20px; background: #edf2f7; border-radius: 8px;">
+    <h3 style="color: #2d3748; margin-bottom: 15px;">👤 Default Admin Account</h3>
+    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">
+        <strong>Username:</strong> admin<br>
+        <strong>Password:</strong> AdminSecure123!@#
+    </p>
+    <p style="color: #718096; font-size: 12px; margin-top: 10px;">
+        Use this account to access admin features and security monitoring.
+    </p>
+</div>
+
+<script>
+document.getElementById('username').focus();
+</script>
+{% endblock %}

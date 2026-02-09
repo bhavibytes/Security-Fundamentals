@@ -16,35 +16,110 @@ A comprehensive Flask-based web application demonstrating defensive security pri
 - **Session Management:** Secure session handling with timeout (30 minutes)
 
 ### 2. Password Security
-- **Password Hashing:** SHA-256 with unique salts (bcrypt recommended for production)
-- **Strong Password Policy:** Minimum 8 characters, mixed case, numbers
+- **bcrypt Hashing:** Passwords stored using bcrypt with unique salts
+- **Strong Password Policy:**
+  - Minimum 12 characters
+  - Mixed case letters
+  - Numbers and special characters
+  - Common pattern detection
 - **Account Lockout:** 5 failed attempts lock account for 5 minutes
-- **Password Validation:** Server-side strength requirements
+- **Password Change:** Secure password update mechanism
 
 ### 3. Input Validation & Sanitization
 - **SQL Injection Prevention:** Parameterized queries exclusively
-- **Cross-Site Scripting (XSS) Prevention:** HTML entity encoding
-- **Input Sanitization:** Server-side cleaning of all inputs
+- **Input pattern validation**
+- **No string concatenation in SQL**
+- **Cross-Site Scripting (XSS) Prevention:**
+  - HTML entity encoding
+  - Input sanitization on server-side
+  - Content Security Policy headers
 - **Email Validation:** Proper email format verification
 
 ### 4. Session Security
-- **Secure Cookies:** HTTP-only, secure flags
-- **Session Fixation Prevention:** Session regeneration on login
-- **Timeout:** Automatic session expiration (30 minutes)
-- **Rate Limiting:** Protection against brute force attacks
+- **Secure Cookies:**
+  - HTTP-only
+  - Secure flags
+- **Session Fixation Prevention:** Regeneration on login
+- **Timeout:** Automatic session expiration
+- **Forced Re-authentication:** For sensitive operations
 
-### 5. Security Headers & Monitoring
-- **Security Headers:** CSP, X-Frame-Options, X-Content-Type-Options
+### 5. Additional Security Controls
+- **Security Headers:**
+  - Content-Security-Policy
+  - X-Frame-Options: DENY
+  - X-Content-Type-Options: nosniff
+  - Strict-Transport-Security
+  - X-XSS-Protection
 - **Audit Logging:** All security events logged
 - **Error Handling:** Generic error messages (no information leakage)
+- **Database Security:** Least privilege principle in schema design
 
-## 🚀 Quick Start
+## 🚨 Threats and Mitigations
+
+| Threat | Mitigation Implemented |
+|--------|----------------------|
+| SQL Injection | Parameterized queries, input validation, SQL keyword filtering |
+| Cross-Site Scripting (XSS) | Input sanitization, HTML encoding, CSP headers |
+| Brute Force Attacks | Account lockout, rate limiting, strong password requirements |
+| Session Hijacking | Secure cookies, session regeneration, timeouts |
+| Information Disclosure | Generic error messages, no stack traces in production |
+| Weak Authentication | bcrypt hashing, password complexity, account lockout |
+| CSRF | State-changing operations require authentication |
+| Clickjacking | X-Frame-Options: DENY header |
+
+## 🏗️ Security Layers
+
+### Perimeter Defense
+- Security headers
+- Rate limiting
+
+### Authentication Layer
+- Strong password hashing
+- Session management
+
+### Authorization Layer
+- Role-based access control
+
+### Input Validation Layer
+- Sanitization
+- Validation
+- Encoding
+
+### Data Layer
+- Parameterized queries
+- Prepared statements
+
+### Monitoring Layer
+- Audit logging
+- Security event tracking
+
+## 🔄 Application Flow
+
+### 1. Registration Process
+```
+User Input → Input Validation → Password Strength Check → 
+Sanitization → bcrypt Hashing → Database Insert → Success/Error Response
+```
+
+### 2. Authentication Flow
+```
+Login Request → Input Sanitization → Database Lookup → 
+Password Verification → Session Creation → Access Control → Dashboard Redirect
+```
+
+### 3. Request Processing
+```
+HTTP Request → Security Headers → Session Validation → 
+Input Sanitization → Business Logic → Secure Response → Audit Logging
+```
+
+## 🚀 Installation & Setup
 
 ### Prerequisites
 - Python 3.8+
 - pip package manager
 
-### Installation
+### Installation Steps
 
 1. **Clone the repository:**
 ```bash
@@ -54,15 +129,27 @@ cd Security-Fundamentals/secure-app
 
 2. **Install dependencies:**
 ```bash
-pip install Flask
+pip install -r requirements.txt
 ```
 
-3. **Run the application:**
+3. **Set up environment variables:**
 ```bash
-python app_simple.py
+cp .env.example .env
+# Edit .env with your secret keys
 ```
 
-4. **Access the application:**
+4. **Initialize the database:**
+```bash
+python app.py
+# The database will be created automatically
+```
+
+5. **Run the application:**
+```bash
+python app.py
+```
+
+6. **Access the application:**
 Open your browser and navigate to `http://localhost:5000`
 
 ## 🔑 Default Credentials
@@ -74,22 +161,22 @@ Open your browser and navigate to `http://localhost:5000`
 ## 📊 Features Overview
 
 ### User Features
-- ✅ Secure registration with strong password enforcement
-- ✅ Login with account lockout protection
-- ✅ Personal dashboard with security information
-- ✅ Session management with automatic timeout
+- Secure registration with strong password enforcement
+- Login with account lockout protection
+- Personal dashboard with security information
+- Session management with automatic timeout
 
 ### Admin Features
-- ✅ User management and monitoring
-- ✅ Security audit log viewing
-- ✅ Account status tracking
-- ✅ System security overview
+- User management and monitoring
+- Security audit log viewing
+- Account status tracking
+- System security overview
 
 ### Security Testing
-- ✅ SQL injection protection testing
-- ✅ XSS prevention testing
-- ✅ Brute force attack simulation
-- ✅ Session security verification
+- SQL injection protection testing
+- XSS prevention testing
+- Brute force attack simulation
+- Session security verification
 
 ## 🧪 Testing Security Features
 
@@ -117,9 +204,9 @@ Check browser developer tools for secure cookie settings.
 
 ```
 secure-app/
-├── app_simple.py          # Main Flask application
+├── app.py                 # Main Flask application
 ├── requirements.txt       # Python dependencies
-├── .env                   # Environment configuration
+├── .env                   # Environment variables
 ├── security_audit.log     # Audit log file
 ├── security_app.db        # SQLite database
 ├── templates/             # HTML templates
@@ -130,7 +217,7 @@ secure-app/
 │   ├── dashboard.html    # User dashboard
 │   ├── admin.html        # Admin panel
 │   └── error.html        # Error pages
-└── README.md             # This file
+└── README_Flask.md       # This file
 ```
 
 ## 🔧 Configuration
@@ -143,9 +230,9 @@ secure-app/
 ### Security Configuration
 - Session timeout: 30 minutes
 - Account lockout: 5 failed attempts → 5 minutes
-- Rate limiting: 15 requests per 5 minutes (login), 10 per 15 minutes (registration)
+- Rate limiting: 5 requests per 5 minutes (login), 3 per 15 minutes (registration)
 
-## 📈 Security Monitoring
+## 📈 Monitoring & Logging
 
 ### Security Events Logged
 - User registration
@@ -164,7 +251,7 @@ secure-app/
 This project demonstrates:
 
 1. **Secure Authentication**
-   - Password hashing with salts
+   - Password hashing with bcrypt
    - Session management
    - Multi-factor authentication concepts
 
@@ -188,27 +275,22 @@ This project demonstrates:
    - Intrusion detection
    - Incident response basics
 
-## 🚨 Threats and Mitigations
-
-| Threat | Mitigation Implemented |
-|--------|----------------------|
-| SQL Injection | Parameterized queries, input validation |
-| Cross-Site Scripting (XSS) | Input sanitization, HTML encoding, CSP headers |
-| Brute Force Attacks | Account lockout, rate limiting, strong passwords |
-| Session Hijacking | Secure cookies, session regeneration, timeouts |
-| Information Disclosure | Generic error messages, no stack traces |
-| Weak Authentication | Password hashing, complexity requirements |
-
 ## 🐛 Common Issues & Solutions
 
 ### Python Installation Issues
-If Python is not found, ensure Python is installed and added to PATH.
+If Python is not found, ensure Python is installed and added to PATH:
+```bash
+# Check Python installation
+python --version
+# or
+python3 --version
+```
 
 ### Dependency Installation
 If pip fails, try:
 ```bash
 python -m pip install --upgrade pip
-python -m pip install Flask
+python -m pip install -r requirements.txt
 ```
 
 ### Database Issues
@@ -230,6 +312,7 @@ This project is for educational purposes. Use responsibly and ethically.
 
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [Flask Security Documentation](https://flask.palletsprojects.com/)
+- [bcrypt Password Hashing](https://pypi.org/project/bcrypt/)
 - [SQLAlchemy Documentation](https://docs.sqlalchemy.org/)
 
 ---

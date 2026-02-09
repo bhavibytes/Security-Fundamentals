@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - Cybersecurity Learning App{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 40px;">
+    <h1 style="color: #2d3748; margin-bottom: 10px;">🔧 Admin Panel</h1>
+    <p style="color: #4a5568;">Security monitoring and user management</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">{{ users|length }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">
+            {% set admin_count = 0 %}
+            {% for user in users %}
+            {% if user.role == 'admin' %}
+            {% set admin_count = admin_count + 1 %}
+            {% endif %}
+            {% endfor %}
+            {{ admin_count }}
+        </div>
+        <div class="stat-label">Admin Users</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">
+            {% set locked_count = 0 %}
+            {% for user in users %}
+            {% if user.is_locked == 1 or user.is_locked == True %}
+            {% set locked_count = locked_count + 1 %}
+            {% endif %}
+            {% endfor %}
+            {{ locked_count }}
+        </div>
+        <div class="stat-label">Locked Accounts</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ logs|length }}</div>
+        <div class="stat-label">Recent Events</div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+    <div>
+        <h2 style="color: #2d3748; margin-bottom: 20px;">👥 User Management</h2>
+        <div
+            style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-height: 500px;">
+            <div style="overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="background: #f7fafc; position: sticky; top: 0;">
+                        <tr>
+                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0;">Username</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0;">Role</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0;">Status</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0;">Failed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr
+                            style="{% if user.is_locked == 1 or user.is_locked == True %}background: #fed7d7;{% endif %}">
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px;">
+                                <div style="word-break: break-all;">
+                                    <strong>{{ user.username }}</strong><br>
+                                    <small style="color: #718096;">{{ user.email }}</small>
+                                </div>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
+                                <span class="security-badge badge-{{ user.role }}">{{ user.role }}</span>
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
+                                {% if user.is_locked == 1 or user.is_locked == True %}
+                                <span style="color: #e53e3e;">🔒 Locked</span>
+                                {% else %}
+                                <span style="color: #38a169;">✅ Active</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">
+                                {{ user.failed_attempts }}/5
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h2 style="color: #2d3748; margin-bottom: 20px;">📋 Security Audit Log</h2>
+        <div style="max-height: 500px; overflow-y: auto;">
+            {% for log in logs %}
+            <div class="log-entry">
+                <div class="log-time">{{ log.timestamp[:19] if log.timestamp else 'Unknown' }}</div>
+                <div class="log-event">{{ log.event_type }}</div>
+                <div class="log-details" style="word-break: break-all; font-size: 12px;">
+                    IP: {{ log.ip_address }}
+                    {% if log.username %}| User: {{ log.username }}{% endif %}
+                    {% if log.details %}| {{ log.details[:50] }}{% if log.details|length > 50 %}...{% endif %}{% endif
+                    %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 40px; padding: 30px; background: #f7fafc; border-radius: 12px;">
+    <h2 style="color: #2d3748; margin-bottom: 20px;">🛡️ Security Status</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+            <h4 style="color: #38a169; margin-bottom: 10px;">✅ Authentication</h4>
+            <p style="color: #4a5568; font-size: 14px;">Strong password policies and secure login</p>
+        </div>
+        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+            <h4 style="color: #38a169; margin-bottom: 10px;">✅ Authorization</h4>
+            <p style="color: #4a5568; font-size: 14px;">Role-based access control enforced</p>
+        </div>
+        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+            <h4 style="color: #38a169; margin-bottom: 10px;">✅ Input Validation</h4>
+            <p style="color: #4a5568; font-size: 14px;">SQL injection and XSS prevention</p>
+        </div>
+        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+            <h4 style="color: #38a169; margin-bottom: 10px;">✅ Monitoring</h4>
+            <p style="color: #4a5568; font-size: 14px;">Comprehensive audit logging active</p>
+        </div>
+        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+            <h4 style="color: #38a169; margin-bottom: 10px;">✅ Rate Limiting</h4>
+            <p style="color: #4a5568; font-size: 14px;">Brute force attack prevention</p>
+        </div>
+        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid #38a169;">
+            <h4 style="color: #38a169; margin-bottom: 10px;">✅ Session Security</h4>
+            <p style="color: #4a5568; font-size: 14px;">Secure cookies and timeout management</p>
+        </div>
+    </div>
+</div>
+
+<div
+    style="margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+    <h2 style="margin-bottom: 20px;">🎯 Admin Capabilities</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div>
+            <h4 style="margin-bottom: 10px;">User Management</h4>
+            <p style="font-size: 14px; opacity: 0.9;">
+                View all users, monitor account status, track failed attempts
+            </p>
+        </div>
+        <div>
+            <h4 style="margin-bottom: 10px;">Security Monitoring</h4>
+            <p style="font-size: 14px; opacity: 0.9;">
+                Real-time audit logs, security event tracking
+            </p>
+        </div>
+        <div>
+            <h4 style="margin-bottom: 10px;">Threat Detection</h4>
+            <p style="font-size: 14px; opacity: 0.9;">
+                Account lockouts, rate limiting, suspicious activity
+            </p>
+        </div>
+        <div>
+            <h4 style="margin-bottom: 10px;">System Status</h4>
+            <p style="font-size: 14px; opacity: 0.9;">
+                Overall security posture, active protections
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

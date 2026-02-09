@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Cybersecurity Learning App{% endblock %}
+
+{% block content %}
+<div style="text-align: center; padding: 40px 0;">
+    <h1 style="font-size: 48px; color: #2d3748; margin-bottom: 20px;">
+        🔒 Cybersecurity Learning Application
+    </h1>
+    <p style="font-size: 20px; color: #4a5568; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        A secure web application demonstrating defensive security principles and threat mitigation strategies.
+        Learn about authentication, authorization, and protection against common vulnerabilities.
+    </p>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">12+</div>
+            <div class="stat-label">Security Features</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Threat Mitigations</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Security Layers</div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 60px;">
+    <h2 style="text-align: center; color: #2d3748; margin-bottom: 40px;">Security Features Implemented</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div class="card">
+            <h3>🔐 Authentication & Authorization</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ Secure user registration & login</li>
+                <li>✅ Role-Based Access Control (RBAC)</li>
+                <li>✅ Session management with timeout</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>🛡️ Password Security</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ bcrypt hashing with salts</li>
+                <li>✅ Strong password policies</li>
+                <li>✅ Account lockout protection</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>🔍 Input Validation</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ SQL injection prevention</li>
+                <li>✅ XSS protection</li>
+                <li>✅ Input sanitization</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>🌐 Session Security</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ Secure HTTP-only cookies</li>
+                <li>✅ Session fixation prevention</li>
+                <li>✅ Automatic session expiration</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>📊 Security Headers</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ Content Security Policy</li>
+                <li>✅ X-Frame-Options: DENY</li>
+                <li>✅ XSS Protection headers</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>📝 Audit & Monitoring</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ Security event logging</li>
+                <li>✅ Rate limiting</li>
+                <li>✅ Error handling</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 60px; text-align: center;">
+    <h2 style="color: #2d3748; margin-bottom: 20px;">Get Started</h2>
+    <p style="color: #4a5568; margin-bottom: 30px;">
+        Register an account to explore the security features or login if you already have one.
+    </p>
+    <div style="display: flex; gap: 20px; justify-content: center;">
+        <a href="{{ url_for('register') }}" class="btn btn-primary">Register Account</a>
+        <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+    </div>
+</div>
+
+<div style="margin-top: 60px; padding: 30px; background: #f7fafc; border-radius: 12px;">
+    <h2 style="color: #2d3748; margin-bottom: 20px;">Technology Stack</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🐍</div>
+            <strong>Python Flask</strong>
+            <p style="color: #4a5568; font-size: 14px;">Web Framework</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🗄️</div>
+            <strong>SQLite</strong>
+            <p style="color: #4a5568; font-size: 14px;">Database</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🎨</div>
+            <strong>HTML/CSS</strong>
+            <p style="color: #4a5568; font-size: 14px;">Frontend</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🔐</div>
+            <strong>bcrypt</strong>
+            <p style="color: #4a5568; font-size: 14px;">Password Hashing</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Cybersecurity Learning App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a5568;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #4a5568;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        main {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+
+        .alert-info {
+            background: #bee3f8;
+            color: #2c5282;
+            border: 1px solid #90cdf4;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            color: #2d3748;
+            margin-bottom: 16px;
+        }
+
+        .security-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-admin {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .badge-user {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .log-entry {
+            padding: 12px;
+            border-left: 4px solid #667eea;
+            background: #f7fafc;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+
+        .log-time {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .log-event {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .log-details {
+            font-size: 14px;
+            color: #4a5568;
+            margin-top: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <a href="/" class="logo">🔒 CyberSec Learning</a>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    
+                    <a href="/login" class="btn btn-primary">Login</a>
+                    <a href="/register" class="btn btn-secondary">Register</a>
+                    
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            
+            
+            
+
+            
+<div style="text-align: center; padding: 40px 0;">
+    <h1 style="font-size: 48px; color: #2d3748; margin-bottom: 20px;">
+        🔒 Cybersecurity Learning Application
+    </h1>
+    <p style="font-size: 20px; color: #4a5568; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        A secure web application demonstrating defensive security principles and threat mitigation strategies.
+        Learn about authentication, authorization, and protection against common vulnerabilities.
+    </p>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">12+</div>
+            <div class="stat-label">Security Features</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Threat Mitigations</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Security Layers</div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 60px;">
+    <h2 style="text-align: center; color: #2d3748; margin-bottom: 40px;">Security Features Implemented</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div class="card">
+            <h3>🔐 Authentication & Authorization</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ Secure user registration & login</li>
+                <li>✅ Role-Based Access Control (RBAC)</li>
+                <li>✅ Session management with timeout</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>🛡️ Password Security</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ bcrypt hashing with salts</li>
+                <li>✅ Strong password policies</li>
+                <li>✅ Account lockout protection</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>🔍 Input Validation</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ SQL injection prevention</li>
+                <li>✅ XSS protection</li>
+                <li>✅ Input sanitization</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>🌐 Session Security</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ Secure HTTP-only cookies</li>
+                <li>✅ Session fixation prevention</li>
+                <li>✅ Automatic session expiration</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>📊 Security Headers</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ Content Security Policy</li>
+                <li>✅ X-Frame-Options: DENY</li>
+                <li>✅ XSS Protection headers</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>📝 Audit & Monitoring</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li>✅ Security event logging</li>
+                <li>✅ Rate limiting</li>
+                <li>✅ Error handling</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 60px; text-align: center;">
+    <h2 style="color: #2d3748; margin-bottom: 20px;">Get Started</h2>
+    <p style="color: #4a5568; margin-bottom: 30px;">
+        Register an account to explore the security features or login if you already have one.
+    </p>
+    <div style="display: flex; gap: 20px; justify-content: center;">
+        <a href="/register" class="btn btn-primary">Register Account</a>
+        <a href="/login" class="btn btn-secondary">Login</a>
+    </div>
+</div>
+
+<div style="margin-top: 60px; padding: 30px; background: #f7fafc; border-radius: 12px;">
+    <h2 style="color: #2d3748; margin-bottom: 20px;">Technology Stack</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🐍</div>
+            <strong>Python Flask</strong>
+            <p style="color: #4a5568; font-size: 14px;">Web Framework</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🗄️</div>
+            <strong>SQLite</strong>
+            <p style="color: #4a5568; font-size: 14px;">Database</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🎨</div>
+            <strong>HTML/CSS</strong>
+            <p style="color: #4a5568; font-size: 14px;">Frontend</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🔐</div>
+            <strong>bcrypt</strong>
+            <p style="color: #4a5568; font-size: 14px;">Password Hashing</p>
+        </div>
+    </div>
+</div>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Cybersecurity Learning Application | Defensive Security Principles</p>
+        </footer>
+    </div>
+</body>
+
+</html>

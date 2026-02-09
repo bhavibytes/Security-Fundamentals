@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Error {{ error_code }} - Cybersecurity Learning App{% endblock %}
+
+{% block content %}
+<div style="text-align: center; max-width: 600px; margin: 0 auto;">
+    <div style="font-size: 120px; font-weight: bold; color: #e2e8f0; margin-bottom: 20px;">
+        {{ error_code }}
+    </div>
+
+    <h1 style="color: #2d3748; margin-bottom: 20px;">{{ message }}</h1>
+
+    <div style="margin-bottom: 40px;">
+        {% if error_code == 403 %}
+        <p style="color: #4a5568; font-size: 18px; margin-bottom: 20px;">
+            Access Denied - You don't have permission to view this page.
+        </p>
+        <div style="background: #fed7d7; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #742a2a; margin-bottom: 10px;">🔒 Security Notice</h3>
+            <p style="color: #742a2a; font-size: 14px;">
+                This access attempt has been logged for security monitoring.
+                Repeated unauthorized attempts may result in account restrictions.
+            </p>
+        </div>
+        {% elif error_code == 404 %}
+        <p style="color: #4a5568; font-size: 18px; margin-bottom: 20px;">
+            The page you're looking for doesn't exist.
+        </p>
+        {% elif error_code == 429 %}
+        <p style="color: #4a5568; font-size: 18px; margin-bottom: 20px;">
+            Too Many Requests - Rate limit exceeded.
+        </p>
+        <div style="background: #fed7d7; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #742a2a; margin-bottom: 10px;">⏱️ Rate Limiting</h3>
+            <p style="color: #742a2a; font-size: 14px;">
+                You've made too many requests. Please wait a moment before trying again.
+                This protection helps prevent automated attacks.
+            </p>
+        </div>
+        {% elif error_code == 500 %}
+        <p style="color: #4a5568; font-size: 18px; margin-bottom: 20px;">
+            Internal Server Error - Something went wrong.
+        </p>
+        <div style="background: #fed7d7; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #742a2a; margin-bottom: 10px;">🚨 Error Logged</h3>
+            <p style="color: #742a2a; font-size: 14px;">
+                This error has been logged and will be reviewed by our security team.
+                No sensitive information was exposed.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="display: flex; gap: 20px; justify-content: center;">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Go Home</a>
+        {% if session.user_id %}
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Dashboard</a>
+        {% else %}
+        <a href="{{ url_for('login') }}" class="btn btn-secondary">Login</a>
+        {% endif %}
+    </div>
+</div>
+
+<div style="max-width: 600px; margin: 40px auto; padding: 30px; background: #f7fafc; border-radius: 12px;">
+    <h3 style="color: #2d3748; margin-bottom: 15px;">🛡️ Security Features</h3>
+    <p style="color: #4a5568; font-size: 14px; line-height: 1.6;">
+        Our application implements comprehensive security measures including:
+    </p>
+    <ul style="color: #4a5568; font-size: 14px; line-height: 1.6; margin-top: 15px;">
+        <li>Input validation and sanitization</li>
+        <li>Rate limiting to prevent abuse</li>
+        <li>Comprehensive error logging</li>
+        <li>Secure session management</li>
+        <li>Role-based access control</li>
+        <li>Protection against common attacks</li>
+    </ul>
+</div>
+{% endblock %}
